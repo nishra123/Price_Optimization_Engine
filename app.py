@@ -94,8 +94,9 @@ def scrape_amazon_data(search_item, lower_bound, upper_bound):
         return []
 
     finally:
+        if driver is not None:
         # Close the browser window
-        driver.quit()
+            driver.quit()
 
 def main():
     st.title("Product Retail Price Optimization")
