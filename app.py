@@ -8,6 +8,7 @@ import time
 from sklearn.linear_model import Lasso
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
+from getuseragent import UserAgent
 
 # Load your dataset into 'df' (assuming it contains the necessary columns)
 # ...
@@ -24,51 +25,19 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 lasso_model = Lasso()
 lasso_model.fit(X_train, y_train)
 
-from fake_useragent.errors import FakeUserAgentError
-
-import random
-
-# Function to generate a random user agent string
+# Function to get a random user agent
 def get_random_user_agent():
-    platform = random.choice(['Macintosh', 'Windows', 'X11', 'Linux'])
-    browser = random.choice(['chrome', 'firefox', 'safari'])
-    if browser == 'chrome':
-        webkit_version = random.randint(500, 599)
-        version = f"{random.randint(0, 99)}.0.{random.randint(0, 9999)}.{random.randint(0, 99)}"
-    elif browser == 'firefox':
-        webkit_version = random.randint(500, 599)
-        version = f"{random.randint(1, 99)}.0.{random.randint(1, 99)}"
-    elif browser == 'safari':
-        webkit_version = random.randint(500, 599)
-        version = f"{random.randint(1, 99)}.0.{random.randint(1, 99)}"
-    else:
-        webkit_version = random.randint(500, 599)
-        version = f"{random.randint(0, 99)}.0.{random.randint(0, 9999)}.{random.randint(0, 99)}"
-
-    if platform == 'Windows':
-        platform = f"Windows NT {random.choice(['5.0', '5.1', '5.2', '6.0', '6.1', '6.2', '6.3'])}; Win64; x64"
-    elif platform == 'Macintosh':
-        platform = 'Macintosh; Intel Mac OS X 10_{random.randint(10, 15)}_{random.randint(0, 9)}'
-    elif platform == 'Linux':
-        platform = 'X11; Linux x86_64'
-
-    if browser == 'chrome':
-        return f"Mozilla/5.0 ({platform}) AppleWebKit/{webkit_version}.0 (KHTML, like Gecko) Chrome/{version} Safari/{webkit_version}.0"
-    elif browser == 'firefox':
-        return f"Mozilla/5.0 ({platform}; rv:{version}) Gecko/20100101 Firefox/{version}"
-    elif browser == 'safari':
-        return f"Mozilla/5.0 ({platform}) AppleWebKit/{webkit_version}.36 (KHTML, like Gecko) Version/{version} Safari/{webkit_version}.36"
-    else:
-        return f"Mozilla/5.0 (compatible; MSIE {random.randint(5, 9)}.0; {platform}; Trident/{random.randint(3, 5)}.{random.randint(0, 1)})"
 
 
+    useragent = UserAgent()
+
+    return useragent.Random()
 
 # Function to scrape data from Amazon and return a DataFrame
 def scrape_amazon_data(search_item, lower_bound, upper_bound):
     chrome_options = Options()
     chrome_options.add_argument('--headless')  # Run Chrome in headless mode
     chrome_options.add_argument(f'user-agent={get_random_user_agent()}')
-    driver = None
 
     try:
         # Initialize the Chrome browser
@@ -117,9 +86,8 @@ def scrape_amazon_data(search_item, lower_bound, upper_bound):
         return []
 
     finally:
-        if driver:
         # Close the browser window
-            driver.quit()
+        driver.quit()
 
 def main():
     st.title("Product Retail Price Optimization")
