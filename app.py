@@ -25,9 +25,19 @@ lasso_model = Lasso()
 lasso_model.fit(X_train, y_train)
 
 # Function to get a random user agent
-def get_random_user_agent():
-    ua = UserAgent()
-    return ua.random
+
+from fake_useragent.errors import FakeUserAgentError
+
+def get_random_user_agent(retries=3, delay=1):
+    for _ in range(retries):
+        try:
+            ua = UserAgent()
+            return ua.random
+        except FakeUserAgentError as e:
+            print(f"Failed to retrieve user-agent: {e}. Retrying...")
+            time.sleep(delay)
+    raise RuntimeError("Failed to retrieve user-agent after retries")
+
 
 # Function to scrape data from Amazon and return a DataFrame
 def scrape_amazon_data(search_item, lower_bound, upper_bound):
