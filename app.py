@@ -24,10 +24,19 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 lasso_model = Lasso()
 lasso_model.fit(X_train, y_train)
 
-# Function to get a random user agent
-def get_random_user_agent():
-    ua = UserAgent()
-    return ua.random
+from fake_useragent.errors import FakeUserAgentError
+
+def get_random_user_agent(retries=3, delay=1):
+    for _ in range(retries):
+        try:
+            ua = UserAgent()
+            return ua.random
+        except FakeUserAgentError as e:
+            print(f"Failed to retrieve user-agent: {e}. Retrying...")
+            time.sleep(delay)
+    print("Failed to retrieve user-agent after retries. Using default user-agent.")
+    return "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+
 
 # Function to scrape data from Amazon and return a DataFrame
 def scrape_amazon_data(search_item, lower_bound, upper_bound):
