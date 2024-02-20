@@ -26,16 +26,41 @@ lasso_model.fit(X_train, y_train)
 
 from fake_useragent.errors import FakeUserAgentError
 
-def get_random_user_agent(retries=3, delay=1):
-    for _ in range(retries):
-        try:
-            ua = UserAgent()
-            return ua.random
-        except FakeUserAgentError as e:
-            print(f"Failed to retrieve user-agent: {e}. Retrying...")
-            time.sleep(delay)
-    print("Failed to retrieve user-agent after retries. Using default user-agent.")
-    return "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+import random
+
+# Function to generate a random user agent string
+def generate_user_agent():
+    platform = random.choice(['Macintosh', 'Windows', 'X11', 'Linux'])
+    browser = random.choice(['chrome', 'firefox', 'safari'])
+    if browser == 'chrome':
+        webkit_version = random.randint(500, 599)
+        version = f"{random.randint(0, 99)}.0.{random.randint(0, 9999)}.{random.randint(0, 99)}"
+    elif browser == 'firefox':
+        webkit_version = random.randint(500, 599)
+        version = f"{random.randint(1, 99)}.0.{random.randint(1, 99)}"
+    elif browser == 'safari':
+        webkit_version = random.randint(500, 599)
+        version = f"{random.randint(1, 99)}.0.{random.randint(1, 99)}"
+    else:
+        webkit_version = random.randint(500, 599)
+        version = f"{random.randint(0, 99)}.0.{random.randint(0, 9999)}.{random.randint(0, 99)}"
+
+    if platform == 'Windows':
+        platform = f"Windows NT {random.choice(['5.0', '5.1', '5.2', '6.0', '6.1', '6.2', '6.3'])}; Win64; x64"
+    elif platform == 'Macintosh':
+        platform = 'Macintosh; Intel Mac OS X 10_{random.randint(10, 15)}_{random.randint(0, 9)}'
+    elif platform == 'Linux':
+        platform = 'X11; Linux x86_64'
+
+    if browser == 'chrome':
+        return f"Mozilla/5.0 ({platform}) AppleWebKit/{webkit_version}.0 (KHTML, like Gecko) Chrome/{version} Safari/{webkit_version}.0"
+    elif browser == 'firefox':
+        return f"Mozilla/5.0 ({platform}; rv:{version}) Gecko/20100101 Firefox/{version}"
+    elif browser == 'safari':
+        return f"Mozilla/5.0 ({platform}) AppleWebKit/{webkit_version}.36 (KHTML, like Gecko) Version/{version} Safari/{webkit_version}.36"
+    else:
+        return f"Mozilla/5.0 (compatible; MSIE {random.randint(5, 9)}.0; {platform}; Trident/{random.randint(3, 5)}.{random.randint(0, 1)})"
+
 
 
 # Function to scrape data from Amazon and return a DataFrame
