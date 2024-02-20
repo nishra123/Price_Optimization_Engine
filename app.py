@@ -36,7 +36,9 @@ def get_random_user_agent(retries=3, delay=1):
         except FakeUserAgentError as e:
             print(f"Failed to retrieve user-agent: {e}. Retrying...")
             time.sleep(delay)
-    raise RuntimeError("Failed to retrieve user-agent after retries")
+    print("Failed to retrieve user-agent after retries. Using default user-agent.")
+    return "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+
 
 
 # Function to scrape data from Amazon and return a DataFrame
