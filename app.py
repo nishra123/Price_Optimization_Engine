@@ -29,7 +29,7 @@ from fake_useragent.errors import FakeUserAgentError
 import random
 
 # Function to generate a random user agent string
-def generate_user_agent():
+def get_random_user_agent():
     platform = random.choice(['Macintosh', 'Windows', 'X11', 'Linux'])
     browser = random.choice(['chrome', 'firefox', 'safari'])
     if browser == 'chrome':
