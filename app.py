@@ -43,6 +43,7 @@ def scrape_amazon_data(search_item, lower_bound, upper_bound):
     chrome_options = Options()
     chrome_options.add_argument('--headless')  # Run Chrome in headless mode
     chrome_options.add_argument(f'user-agent={get_random_user_agent()}')
+    driver = None
 
     try:
         # Initialize the Chrome browser
@@ -91,8 +92,9 @@ def scrape_amazon_data(search_item, lower_bound, upper_bound):
         return []
 
     finally:
+        if driver:
         # Close the browser window
-        driver.quit()
+            driver.quit()
 
 def main():
     st.title("Product Retail Price Optimization")
