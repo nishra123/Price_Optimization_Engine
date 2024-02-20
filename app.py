@@ -8,7 +8,6 @@ import time
 from sklearn.linear_model import Lasso
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
-from getuseragent import UserAgent
 
 # Load your dataset into 'df' (assuming it contains the necessary columns)
 # ...
@@ -27,18 +26,15 @@ lasso_model.fit(X_train, y_train)
 
 # Function to get a random user agent
 def get_random_user_agent():
-
-
-    useragent = UserAgent()
-
-    return useragent.Random()
+    ua = UserAgent()
+    return ua.random
 
 # Function to scrape data from Amazon and return a DataFrame
 def scrape_amazon_data(search_item, lower_bound, upper_bound):
     chrome_options = Options()
     chrome_options.add_argument('--headless')  # Run Chrome in headless mode
     chrome_options.add_argument(f'user-agent={get_random_user_agent()}')
-    driver = None
+    driver  = None
 
     try:
         # Initialize the Chrome browser
